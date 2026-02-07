@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Prathana 💖</title>
+
+<style>
+:root { --image-scale: 1; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #ffb6c1, #ffe4e1);
+}
+
+.card {
+  background: white;
+  width: 95%;
+  max-width: 420px;
+  padding: 20px 25px;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.text {
+  font-size: 1.3rem;
+  color: #ff4d6d;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height:1.4;
+  word-break: break-word;
+}
+
+.reaction { font-size:0.95rem; color:#ff595e; min-height:22px; margin-top:5px; }
+.countdown { font-size:0.85rem; color:#ff4d6d; margin-top:8px; display:none; }
+
+#storyPhoto {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 15px;
+  opacity: 0;
+  transform: scale(var(--image-scale));
+  transition: opacity 1s ease-in-out, transform 0.5s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+button {
+  padding: 10px 24px;
+  font-size:0.95rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+}
+
+#nextBtn {
+  background:#ff4d6d;
+  color:white;
+  margin-top:20px;
+  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+.buttons {
+  display:none;
+  margin-top:25px;
+  justify-content:center;
+  gap:15px;
+}
+
+#yesBtn {
+  background:#38b000;
+  color:white;
+  --scale:1;
+  transform: scale(var(--scale));
+  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#noBtn {
+  background:#ff595e;
+  color:white;
+  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+@keyframes shake {
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-5px);}
+  50%{transform:translateX(5px);}
+  75%{transform:translateX(-5px);}
+  100%{transform:translateX(0);}
+}
+
+@keyframes heartbeat {
+  0%{transform:scale(var(--scale));}
+  50%{transform:scale(calc(var(--scale)*1.05));}
+  100%{transform:scale(var(--scale));}
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+#valentineText {
+  font-size:1.5rem;
+  color:#ff4d6d;
+  border-right:2px solid #ff4d6d;
+  padding: 0 5px;
+}
+
+@media (max-width:430px){
+  .text { font-size:1.2rem; }
+  #storyPhoto { height:180px; }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3">
+</audio>
+
+<div class="card">
+  <div class="text" id="storyText"></div>
+  <img id="storyPhoto" />
+  <div class="reaction" id="reactionText"></div>
+  <div class="countdown" id="countdown"></div>
+
+  <button id="nextBtn">Next 💌</button>
+
+  <div class="buttons" id="choiceButtons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+</div>
+
+<script>
+const story = [
+  { text:"My baby princess....... I can already see you smile :)", photo:"", position:"center center" },
+  { text:"Did you... think that I didn't do anything for our anniversary???", photo:"", position:"center center" },
+  { text:"I don't care even if we are seperated by a thousand miles....", photo:"", position:"center center" },
+  { text:"because the only person I ALWAYS think about is YOU, whether you are with me or not!", photo:"", position:"center center" },
+  { text:"So...... are you ready to listen me opening my heart on this special day?? ", photo:"", position:"center center" },
+  { text:"I thought about us together a thousand times before I made the decision to ask you out midnight after your bday... (yk howmuch I overthink :P)", photo:"", position:"center center" },
+  { text:"I was too nervous... I was shy... all because....", photo:"", position:"center center" },
+  { text:"Before I asked you out itself, I had already started falling for you....", photo:"", position:"center center" },
+  { text:"Maybe it doesn't make any sense, how can I fall for someone whom I just met?", photo:"", position:"center center" },
+  { text:"But trust me, I did..... We've been together only for 4 months, but it feels like we've known each other for 4 years right???", photo:"", position:"center center" },
+  { text:"That's maybe because we both knew each other in our past lives too... I believe in that..", photo:"", position:"center center" },
+  { text:"Maybe that's why I already started falling for you that early? Idk!", photo:"", position:"center center" },
+  { text:"My soul knew, you are my girl, my baby, my wife, my future, my everything!", photo:"", position:"center center" },
+  { text:"That is the only reason why I was shy to talk to you in the starting (garba practice night), it was a weird feeling, only with you", photo:"", position:"center center" },
+  { text:"And the moment you said yes to me, I went all in. You don't like something, I won't do it. It's that simple.", photo:"", position:"center center" },
+  { text:"I just want to see you smile all the time!", photo:"", position:"center center" },
+  { text:"My baby, you have the prettiest smile in the world... It lights up my entire world!! It makes my day!!", photo:"/photos/cute.png", position:"center center" },
+  { text:"We fought a lot!!! That's because we both were never fake, we both were being ourselves..", photo:"/photos/looking.png", position:"70% 30%" },
+  { text:"You being you, being goofy, throwing tantrums, all of them, I will NEVER get bored or tired of it. It only makes me love you more and more...", photo:"/photos/goofy.png", position:"60% 40%" },
+  { text:"That is my promise to you..... So please continue being yourself my baby princess....", photo:"/photos/together.png", position:"center top" },
+  { text:"And I feel like what we have now is, an understanding that no other couples have...", photo:"", position:"center center" },
+  { text:"I'm the luckiest guy on the planet and I will always be grateful to god for making me meet you...", photo:"", position:"center center" },
+  { text:"I pray to god everyday, thanking for this... for making me meet you...", photo:"", position:"center center" },
+  { text:"because baby, you are the best thing that ever happened in my life!", photo:"", position:"center center" },
+  { text:"because baby... You are everything a man can get....", photo:"", position:"center center" },
+  { text:"You are extremely beautiful....", photo:"/photos/pretty.png", position:"center top" },
+  { text:"You are very smart....", photo:"", position:"center center" },
+  { text:"You are very caring....", photo:"", position:"center center" },
+  { text:"You are very understanding....", photo:"", position:"center center" },
+  { text:"and sometimes you are a monster :P", photo:"/photos/eating.png", position:"center top" },
+  { text:"so I love you so much Prarthana, I can't imagine a life without you....", photo:"/photos/kissing.png", position:"center top" },
+  { text:"Soo.... Prarthana....", photo:"", position:"center center" },
+  { text:"Can I ask you something......?", photo:"", position:"center center" },
+];
+
+const noMessages = [
+  "Hey 😭",
+  "That hurt a little…",
+  "Are you sureee? 🥺",
+  "You’re playing hard to get 😭",
+  "Okay destiny is watching 👀"
+];
+
+let index = 0, yesScale = 1, noScale = 1, noClicks = 0;
+let typingTimer = null;
+let isTyping = false;
+
+const storyText = document.getElementById("storyText");
+const storyPhoto = document.getElementById("storyPhoto");
+const nextBtn = document.getElementById("nextBtn");
+const buttons = document.getElementById("choiceButtons");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const reactionText = document.getElementById("reactionText");
+const countdownEl = document.getElementById("countdown");
+const music = document.getElementById("music");
+
+/* 🔤 SAFE TYPING FUNCTION */
+function typeText(text, speed = 60, callback) {
+  if (typingTimer) clearTimeout(typingTimer);
+  isTyping = true;
+  storyText.innerHTML = "";
+  let i = 0;
+
+  function type() {
+    if (!isTyping) return;
+    if (i < text.length) {
+      storyText.innerHTML += text[i++];
+      typingTimer = setTimeout(type, speed);
+    } else {
+      isTyping = false;
+      if (callback) callback();
+    }
+  }
+  type();
+}
+
+/* 📖 STORY DISPLAY */
+function showStory(i) {
+  typeText(story[i].text, 60);
+
+  if (story[i].photo) {
+    storyPhoto.style.display = "block";
+    storyPhoto.style.opacity = 0;
+    setTimeout(() => {
+      storyPhoto.src = story[i].photo;
+      storyPhoto.style.objectPosition = story[i].position;
+      storyPhoto.style.opacity = 1;
+    }, 200);
+  } else {
+    storyPhoto.style.display = "none";
+  }
+}
+
+showStory(0);
+
+/* 👉 NEXT BUTTON */
+nextBtn.onclick = () => {
+  music.play();
+
+  if (isTyping) {
+    isTyping = false;
+    storyText.innerText = story[index].text;
+    return;
+  }
+
+  index++;
+  if (index < story.length) {
+    showStory(index);
+  } else {
+    nextBtn.style.display = "none";
+    storyPhoto.style.display = "none";
+    buttons.style.display = "flex";
+    countdownEl.style.display = "block";
+
+    storyText.innerHTML = "";
+    const span = document.createElement("span");
+    span.id = "valentineText";
+    storyText.appendChild(span);
+
+    const message = "Will you be my Valentine? 💝";
+    let i = 0;
+    function typeFinalQuestion() {
+      if (i < message.length) {
+        span.textContent += message[i++];
+        setTimeout(typeFinalQuestion, 120);
+      }
+    }
+    typeFinalQuestion();
+  }
+};
+
+/* 😢 NO BUTTON */
+noBtn.onclick = () => {
+  noBtn.style.animation = "shake 0.3s";
+  setTimeout(() => noBtn.style.animation = "", 300);
+
+  reactionText.innerText =
+    noMessages[Math.min(noClicks, noMessages.length - 1)];
+
+  yesScale += 0.07;
+  yesBtn.style.setProperty("--scale", yesScale);
+
+  noScale -= 0.15;
+  noBtn.style.transform = `scale(${noScale}) rotate(${Math.random()*30-15}deg)`;
+
+  noClicks++;
+
+  if (noScale <= 0.2) {
+    noBtn.style.display = "none";
+    reactionText.innerText = "Okay… destiny has decided 💘";
+    yesBtn.style.animation = "heartbeat 2.8s ease-in-out infinite";
+  }
+};
+
+/* 💖 YES BUTTON */
+yesBtn.onclick = () => {
+  buttons.style.display = "none";
+  reactionText.style.display = "none";
+  storyText.innerHTML = "";
+
+  const finalLines = [
+    "My baby.... you just made my heart so happy 🥹💖",
+    "I can’t wait to spend Valentine’s Day with you.",
+    "Thank you for coming to my life and choosing me ❤️",
+    "I love you so much Prarthana.... I can't love you enough..."
+  ];
+
+  let lineIndex = 0;
+  let charIndex = 0;
+
+  const box = document.createElement("div");
+  box.style.fontSize = "1.3rem";
+  box.style.color = "#38b000";
+  box.style.lineHeight = "1.6";
+  box.style.textShadow = "0 0 20px rgba(56,176,0,0.3)";
+  storyText.appendChild(box);
+
+  function typeFinal() {
+    if (lineIndex < finalLines.length) {
+      if (charIndex < finalLines[lineIndex].length) {
+        box.innerHTML += finalLines[lineIndex][charIndex++];
+        setTimeout(typeFinal, 70);
+      } else {
+        box.innerHTML += "<br><br>";
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeFinal, 600);
+      }
+    }
+  }
+  typeFinal();
+};
+
+/* ⏳ COUNTDOWN */
+function updateCountdown() {
+  const valentines = new Date("Feb 14, 2026 00:00:00");
+  const now = new Date();
+  const diff = valentines - now;
+
+  if (diff <= 0) {
+    countdownEl.innerText = "It’s Valentine’s Day 💘";
+    return;
+  }
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  countdownEl.innerText = `${d}d ${h}h ${m}m ${s}s until Valentine’s Day 💕`;
+}
+
+/* ❤️ FLOATING HEARTS START FROM BEGINNING */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.innerText = "💖";
+  heart.style.position = "fixed";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.bottom = "-20px";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  heart.style.animation = "floatUp 6s linear forwards";
+  heart.style.pointerEvents = "none";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 800);
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+</script>
+</body>
+</html>
